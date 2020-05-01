@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphQLBooks.API.Data;
@@ -21,17 +22,14 @@ namespace GraphQLBooks.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env) : this(configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             _env = env;
+            _config = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _config;
         private readonly IHostingEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -39,31 +37,29 @@ namespace GraphQLBooks.API
         {
             services.AddDbContext<BookDbContext>(contextLifetime =>
             {
-                contextLifetime.UseSqlServer(Configuration.GetConnectionString("BookConnectionString"));
+                contextLifetime.UseSqlServer(_config["ConnectionStrings:BookConnectionString"]);
             });
 
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+            services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddScoped<BookSchema>();
 
-            services.AddGraphQL(o => o.ExposeExceptions = _env.IsDevelopment());
+            services.AddGraphQL(o => o.ExposeExceptions = true)
+                .AddGraphTypes(ServiceLifetime.Scoped)
+                .AddDataLoader();
 
-            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, BookDbContext bookDbContext)
         {
-            app.UseCors(builder =>
-            {
-                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            });
-
             app.UseGraphQL<BookSchema>();
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
 
-            bookDbContext.Seed();
+            //bookDbContext.Seed();
         }
     }
 }
