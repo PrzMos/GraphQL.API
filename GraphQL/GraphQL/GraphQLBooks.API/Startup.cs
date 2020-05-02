@@ -59,7 +59,7 @@ namespace GraphQLBooks.API
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
 
-            //bookDbContext.Seed();
+            bookDbContext.Seed();
         }
     }
 }

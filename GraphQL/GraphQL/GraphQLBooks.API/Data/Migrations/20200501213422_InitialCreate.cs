@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GraphQLBooks.API.Migrations
+namespace GraphQLBooks.API.Data.Migrations
 {
     public partial class InitialCreate : Migration
     {
