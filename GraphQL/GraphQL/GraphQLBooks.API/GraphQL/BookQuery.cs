@@ -18,6 +18,20 @@ namespace GraphQLBooks.API.GraphQL
             Field<ListGraphType<AuthorType>>(
                 "authors",
                 resolve: context => authorRepository.GetAuthors());
+            Field<AuthorType>("author",
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IdGraphType>> {Name="id" }),
+                resolve: context =>
+                {
+                    var id = context.GetArgument<int>("id");
+                    return authorRepository.GetAuthor(id);
+                });
+            Field<ListGraphType<BookType>>("booksInYear",
+                arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "year" }),
+                resolve: context =>
+                {
+                    var year = context.GetArgument<int>("year");
+                    return bookRepository.GetBooksByYear(year);
+                });
         }
     }
 }

@@ -17,6 +17,29 @@ namespace GraphQLBooks.API.Repositories
             _context = context;
         }
 
+        public async Task AddBook(Book book)
+        {
+            if (book == null)
+            {
+
+            }
+            else
+            {
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddBooks(List<Book> books)
+        {
+            foreach (var book in books)
+            {
+                _context.Books.Add(book);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public List<Book> GetAllBooks()
         {
             return _context.Books.ToList();
@@ -55,6 +78,11 @@ namespace GraphQLBooks.API.Repositories
             }
 
             return null;
+        }
+
+        public List<Book> GetBooksByYear(int year)
+        {
+            return _context.Books.Where(x => x.PublishDate.Year == year).ToList();
         }
 
         public List<Book> GetBooksForSpecyficAuthor(int authorId)

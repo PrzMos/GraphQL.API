@@ -12,5 +12,8 @@ namespace GraphQLBooks.API.Interfaces
         Book GetBook(int id);
         List<Book> GetBooksForSpecyficAuthor(int authorId);
         Book GetBookForSpecyficAuthor(int bookId,int authorId);
+        List<Book> GetBooksByYear(int year);
+        Task AddBook(Book book);
+        Task AddBooks(List<Book> books);
     }
 }

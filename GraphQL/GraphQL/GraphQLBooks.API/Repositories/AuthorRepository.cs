@@ -17,6 +17,13 @@ namespace GraphQLBooks.API.Repositories
             _context = context;
         }
 
+        public async Task CreateAuthor(Author author)
+        {
+            _context.Authors.Add(author);
+
+            await _context.SaveChangesAsync();
+        }
+
         public Author GetAuthor(int id)
         {
             if (id == 0)

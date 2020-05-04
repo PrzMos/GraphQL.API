@@ -16,12 +16,13 @@ namespace GraphQLBooks.API.GraphQL.Types
             Field(x => x.Id);
             Field(x => x.FirstName);
             Field(x => x.LastName);
-            //Field<List<BookType>>("books",
-            //    resolve: context =>
-            //    {
-            //        var loader = dataLoaderContextAccessor.Context.GetOrAddCollectionBatchLoader<int,Book>(
-            //            "GetBooksByAuthorId",bookRepository.GetBooksForSpecyficAuthor())
-            //    }/*)*/
+            Field<ListGraphType<BookType>>("books",
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IdGraphType>> { Name="id"}),
+                resolve: context =>
+                {
+                    var id = context.GetArgument<int>("id");
+                    return bookRepository.GetBooksForSpecyficAuthor(id);
+                });
         }
     }
 }

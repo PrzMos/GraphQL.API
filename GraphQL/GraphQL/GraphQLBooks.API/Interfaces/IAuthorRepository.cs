@@ -10,5 +10,6 @@ namespace GraphQLBooks.API.Interfaces
     {
         Author GetAuthor(int id);
         List<Author> GetAuthors();
+        Task CreateAuthor(Author author);
     }
 }

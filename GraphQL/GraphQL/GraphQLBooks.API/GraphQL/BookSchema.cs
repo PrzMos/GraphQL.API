@@ -12,6 +12,7 @@ namespace GraphQLBooks.API.GraphQL
         public BookSchema(IDependencyResolver dependencyResolver) : base(dependencyResolver)
         {
             Query = dependencyResolver.Resolve<BookQuery>();
+            Mutation = dependencyResolver.Resolve<BookMutation>();
         }
     }
 }
